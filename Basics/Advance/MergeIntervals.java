@@ -1,12 +1,18 @@
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MergeIntervals {
 
     public static int[][] merge(int[][] intervals) {
 
-        Arrays.sort(intervals,
-                (a, b) -> Integer.compare(a[0], b[0]));
+        if (intervals.length == 0) {
+            return new int[0][];
+        }
+
+        Arrays.sort(intervals, (a, b) ->
+                Integer.compare(a[0], b[0]));
 
         List<int[]> result = new ArrayList<>();
 
@@ -15,15 +21,15 @@ public class MergeIntervals {
             if (result.isEmpty() ||
                     result.get(result.size() - 1)[1] < interval[0]) {
 
-                result.add(interval);
+                result.add(new int[]{
+                        interval[0], interval[1]
+                });
 
             } else {
 
-                result.get(result.size() - 1)[1] =
-                        Math.max(
-                                result.get(result.size() - 1)[1],
-                                interval[1]
-                        );
+                int[] last = result.get(result.size() - 1);
+
+                last[1] = Math.max(last[1], interval[1]);
             }
         }
 
