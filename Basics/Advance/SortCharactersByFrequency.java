@@ -1,38 +1,41 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
-
 public class SortCharactersByFrequency {
 
     public static String frequencySort(String s) {
 
-        Map<Character, Integer> map = new HashMap<>();
+        int[] frequency = new int[65536];
 
+        // Count character frequency
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
-
-            int oldCount = map.getOrDefault(ch, 0);
-            map.put(ch, oldCount + 1);
-        }
-
-        PriorityQueue<Character> pq = new PriorityQueue<>(
-            (a, b) -> Integer.compare(map.get(b), map.get(a))
-        );
-
-        for (Character ch : map.keySet()) {
-            pq.offer(ch);
+            frequency[ch]++;
         }
 
         StringBuilder result = new StringBuilder();
 
-        while (!pq.isEmpty()) {
+        // Find the character with maximum frequency
+        for (int i = 0; i < s.length(); i++) {
 
-            char ch = pq.poll();
-            int frequency = map.get(ch);
+            int maxFrequency = 0;
+            char maxChar = 0;
 
-            for (int i = 0; i < frequency; i++) {
-                result.append(ch);
+            for (int j = 0; j < frequency.length; j++) {
+
+                if (frequency[j] > maxFrequency) {
+                    maxFrequency = frequency[j];
+                    maxChar = (char) j;
+                }
             }
+
+            if (maxFrequency == 0) {
+                break;
+            }
+
+            // Append character according to frequency
+            for (int j = 0; j < maxFrequency; j++) {
+                result.append(maxChar);
+            }
+
+            frequency[maxChar] = 0;
         }
 
         return result.toString();
@@ -42,6 +45,6 @@ public class SortCharactersByFrequency {
 
         String input = "tree";
 
-        System.out.println(frequencySort(input));
+        System.out.println("Sorted String: " + frequencySort(input));
     }
 }
